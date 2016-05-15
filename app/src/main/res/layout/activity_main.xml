@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="hg3n.sensors.MainActivity">
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sample_rate"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:max="1000000"
+        android:indeterminate="false" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="30dp"
+        android:layout_below="@+id/sample_rate"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="y-Axis"
+        android:id="@+id/textView"
+        android:layout_below="@+id/space"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="x-Axis"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/space"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="z-Axis"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/space"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0.0"
+        android:id="@+id/y_axis_value"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0.0"
+        android:id="@+id/z_axis_value"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0.0"
+        android:id="@+id/x_axis_value"
+        android:layout_alignTop="@+id/y_axis_value"
+        android:layout_alignParentStart="true" />
+
+    <Space
+        android:layout_width="20px"
+        android:layout_height="30dp"
+        android:id="@+id/space2"
+        android:layout_below="@+id/x_axis_value"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/textView3" />
+
+    <hg3n.sensors.SensorVisualizer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/data_view"
+        android:layout_below="@+id/space2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
