@@ -12,40 +12,34 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 /**
- * Created by hGen on 13/05/16.
+ * Created by basti-laptop on 15/05/16.
  */
-public class SampleRateAdjust implements SeekBar.OnSeekBarChangeListener {
+public class FFTWindowSizeAdjust implements SeekBar.OnSeekBarChangeListener {
 
-    private static final String TAG = "SampleRateAdjust\t";
+    private static final String TAG = "FFTWindowSizeAdjust\t";
 
-    private SensorManager _sensor_manager;
-    private Sensor _accelerometer;
-    private SensorEventListener _sensor_event_listener;
+    private AccelerometerEventListener _sensor_event_listener;
 
-    public SampleRateAdjust(SensorManager manager, Sensor sensor, SensorEventListener listener) {
-        _sensor_manager = manager;
-        _accelerometer = sensor;
+    public FFTWindowSizeAdjust(AccelerometerEventListener listener) {
         _sensor_event_listener = listener;
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-
         int input_value;
-        int MIN = 1000;
+        int MIN = 1;
+        int MAX = 10;
 
         // check if process is greater than minimum value
         if(progress < MIN) {
             input_value = MIN;
+        } else if(progress > MAX) {
+            input_value = MAX;
         } else {
             input_value = progress;
         }
 
-        // unregister manager to change input value
-        _sensor_manager.unregisterListener(_sensor_event_listener);
-
-        // re register eventlistener with new input value
-        _sensor_manager.registerListener(_sensor_event_listener, _accelerometer, input_value);
+        _sensor_event_listener.setFFTWindowSize((int)Math.pow((double)2,(double)input_value));
     }
 
     @Override

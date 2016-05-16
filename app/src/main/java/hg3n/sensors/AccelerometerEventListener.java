@@ -29,9 +29,12 @@ public class AccelerometerEventListener implements SensorEventListener {
     private float[] _linear_acceleration = new float[3];
 
     private int _data_frame;
-    private LinkedList<AccelerometerData> _data_queue = new LinkedList<AccelerometerData>();
+    private LinkedList<AccelerometerData> _vis_data_queue = new LinkedList<AccelerometerData>();
+    private LinkedList<AccelerometerData> _fft_data_queue = new LinkedList<AccelerometerData>();
+    private int _fft_window_size = 256;
 
     private SensorVisualizer _sensor_visualizer;
+    private FFTVisualizer _fft_visualizer;
 
     public AccelerometerEventListener(Activity activity) {
         _x_text_field = (TextView)activity.findViewById(R.id.x_axis_value);
@@ -39,6 +42,7 @@ public class AccelerometerEventListener implements SensorEventListener {
         _z_text_field = (TextView)activity.findViewById(R.id.z_axis_value);
 
         _sensor_visualizer = (SensorVisualizer)activity.findViewById(R.id.data_view);
+        _fft_visualizer = (FFTVisualizer)activity.findViewById(R.id.fft_view);
     }
 
     @Override
@@ -56,7 +60,7 @@ public class AccelerometerEventListener implements SensorEventListener {
         _linear_acceleration[1] = event.values[1] - _gravity[1];
         _linear_acceleration[2] = event.values[2] - _gravity[2];
 
-        // get magnitued valus
+        // get magnitued values
         double magnitude = - calcMagnitude(_linear_acceleration[0], _linear_acceleration[1], _linear_acceleration[2]);
         Log.d(TAG, Double.toString(magnitude));
 
@@ -71,23 +75,46 @@ public class AccelerometerEventListener implements SensorEventListener {
         temp_data.magnitude = magnitude;
         temp_data.timestamp = current_time;
 
+        // update all UI
+        updateSensorVisualizer(temp_data);
+        updateFFTVisualizer(temp_data);
+        updateTextViews();
+
+        ++_data_frame;
+    }
+
+    private void updateSensorVisualizer(AccelerometerData data) {
         // if there are more than 100 elements in the data queue remove the last added
-        if(_data_frame > 99) {
-            _data_queue.removeFirst();
-            _data_queue.add(temp_data);
+        if(_vis_data_queue.size() > 99) {
+            _vis_data_queue.removeFirst();
+            _vis_data_queue.add(data);
         } else {
-            _data_queue.add(temp_data);
+            _vis_data_queue.add(data);
         }
 
         // update visualizer data queue
-        _sensor_visualizer.updateValues(_data_queue);
+        _sensor_visualizer.updateValues(_vis_data_queue);
+    }
 
+    private void updateFFTVisualizer(AccelerometerData data) {
+        // if there are more than determined window size elements in the fft data queue remove the last added
+        if(_fft_data_queue.size() >= _fft_window_size) {
+            while(_fft_data_queue.size() >= _fft_window_size) {
+                _fft_data_queue.removeFirst();
+            }
+            _fft_data_queue.add(data);
+            // only update if full window contained by queue
+            _fft_visualizer.updateValues(_fft_data_queue);
+        } else {
+            _fft_data_queue.add(data);
+        }
+    }
+
+    private void updateTextViews() {
         // set values to text views
         _x_text_field.setText(String.format("%.2f", _linear_acceleration[0]));
         _y_text_field.setText(String.format("%.2f", _linear_acceleration[1]));
         _z_text_field.setText(String.format("%.2f", _linear_acceleration[2]));
-
-        ++_data_frame;
     }
 
     @Override
@@ -98,6 +125,10 @@ public class AccelerometerEventListener implements SensorEventListener {
     private double calcMagnitude(float x, float y, float z) {
         double sum = Math.pow(x,2) + Math.pow(y,2) + Math.pow(z,2);
         return Math.sqrt(sum);
+    }
+
+    public void setFFTWindowSize(int value) {
+        _fft_window_size = value;
     }
 }
 

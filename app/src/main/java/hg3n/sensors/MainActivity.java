@@ -22,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
     private int _sample_rate = 100;
 
     private SeekBar _sample_rate_bar;
+    private SeekBar _fft_size_bar;
 
     private SensorManager _sensor_manager;
-    private SensorEventListener _sensor_event_listener;
+    private AccelerometerEventListener _sensor_event_listener;
     private Sensor _accelerometer;
 
     @Override
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         // init gui fields
         _sample_rate_bar = (SeekBar)this.findViewById(R.id.sample_rate);
+        _fft_size_bar = (SeekBar)this.findViewById(R.id.window_size);
 
         // fill private members
         _sensor_manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         _sensor_manager.registerListener(_sensor_event_listener, _accelerometer, _sample_rate);
 
         // init and add SeekBarEventListener
-        _sample_rate_bar.setOnSeekBarChangeListener(new SampleRateAdjust(this, _sensor_manager, _accelerometer, _sensor_event_listener));
+        _sample_rate_bar.setOnSeekBarChangeListener(new SampleRateAdjust(_sensor_manager, _accelerometer, _sensor_event_listener));
+        _fft_size_bar.setOnSeekBarChangeListener(new FFTWindowSizeAdjust(_sensor_event_listener));
     }
 
     @Override

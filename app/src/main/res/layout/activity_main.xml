@@ -9,49 +9,38 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hg3n.sensors.MainActivity">
 
-    <SeekBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sample_rate"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:max="1000000"
-        android:indeterminate="false" />
-
     <Space
-        android:layout_width="20px"
-        android:layout_height="30dp"
-        android:layout_below="@+id/sample_rate"
-        android:layout_alignParentEnd="true"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:id="@+id/space"
         android:layout_alignParentStart="true"
-        android:id="@+id/space" />
+        android:layout_alignEnd="@+id/textView3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/space"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="y-Axis"
         android:id="@+id/textView"
-        android:layout_below="@+id/space"
         android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/space"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="x-Axis"
         android:id="@+id/textView2"
-        android:layout_below="@+id/space"
         android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/space"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="z-Axis"
         android:id="@+id/textView3"
-        android:layout_below="@+id/space"
         android:layout_alignParentEnd="true" />
 
     <TextView
@@ -82,20 +71,103 @@
         android:layout_alignParentStart="true" />
 
     <Space
-        android:layout_width="20px"
-        android:layout_height="30dp"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
         android:id="@+id/space2"
         android:layout_below="@+id/x_axis_value"
         android:layout_alignParentStart="true"
         android:layout_alignEnd="@+id/textView3" />
 
-    <hg3n.sensors.SensorVisualizer
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/data_view"
         android:layout_below="@+id/space2"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true" />
+        android:weightSum="2"
+        android:id="@+id/view_layout"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/space"
+            android:weightSum="10"
+            android:id="@+id/sample_rate_layout"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/sample_rate_label"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textAlignment="center"
+                android:text="Sensor Sample Rate" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="7"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/sample_rate"
+                android:max="1000000"
+                />
+
+        </LinearLayout>
+
+        <hg3n.sensors.SensorVisualizer
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/data_view"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true" />
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:id="@+id/space3"
+            android:layout_below="@+id/x_axis_value"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/textView3" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="10"
+            android:id="@+id/window_size_layout"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/window_size_label"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:textAlignment="center"
+                android:text="FFT window size" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="7"
+                android:id="@+id/window_size"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:max="10"
+                android:indeterminate="false" />
+
+        </LinearLayout>
+
+        <hg3n.sensors.FFTVisualizer
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/fft_view"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true" />
+
+    </LinearLayout>
 
 </RelativeLayout>
