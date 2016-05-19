@@ -9,83 +9,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="hg3n.sensors.MainActivity">
 
-    <Space
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:id="@+id/space"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/textView3" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/space"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="y-Axis"
-        android:id="@+id/textView"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/space"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="x-Axis"
-        android:id="@+id/textView2"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/space"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="z-Axis"
-        android:id="@+id/textView3"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0.0"
-        android:id="@+id/y_axis_value"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0.0"
-        android:id="@+id/z_axis_value"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentEnd="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0.0"
-        android:id="@+id/x_axis_value"
-        android:layout_alignTop="@+id/y_axis_value"
-        android:layout_alignParentStart="true" />
-
-    <Space
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:id="@+id/space2"
-        android:layout_below="@+id/x_axis_value"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/textView3" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/space2"
         android:weightSum="2"
         android:id="@+id/view_layout"
         android:layout_gravity="center"
         android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="9">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/mean_value" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -169,5 +113,7 @@
             android:layout_alignParentBottom="true" />
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package hg3n.sensors;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.GradientDrawable;
 import android.nfc.Tag;
+import android.os.Debug;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -26,11 +28,14 @@ public class FFTVisualizer extends View {
 
     private LinkedList<AccelerometerData> _data_queue;
 
+    private LinkedList<Float> _mean_queue = new LinkedList<Float>();
+    private int _mean_iterator = 1;
+
     private int _frame = 0;
 
     private FFT _fft = null;
 
-    public FFTVisualizer(Context context) {
+    public FFTVisualizer(Context context, Activity activity) {
         super(context);
     }
 
@@ -81,7 +86,11 @@ public class FFTVisualizer extends View {
 
     private void drawData(Canvas canvas) {
         drawGraphFrame(canvas, 'r', Color.WHITE); // real component of fft
-        drawGraphFrame(canvas, 'i', Color.GREEN); // imaginary component of fft
+//        drawGraphFrame(canvas, 'i', Color.GREEN); // imaginary component of fft
+    }
+
+    public void resetIterator() {
+        _mean_iterator = 1;
     }
 
     private void drawGraphFrame(Canvas canvas, Character component, int color_code) {
@@ -103,23 +112,51 @@ public class FFTVisualizer extends View {
         // perform fft
         _fft.fft(x, y);
 
-        double[] res = new double[_fft.n];
-        if(component == 'r')
-            res = x;
-        else
-            res = y;
+        double[] res = new double[_fft.n/2];
+        if(component == 'r') {
+            for(int i = 0; i < res.length; ++i) {
+                res[i] = x[i];
+            }
+        } else {
+            for(int i = 0; i < res.length; ++i) {
+                res[i] = y[i];
+            }
+        }
+
 
         // setup frequency domain
-        double f[] = new double[_fft.n];
+        double f[] = new double[(int)_fft.n/2];
 
         // init f and get abs of resulting fft aplitude
         double max = 0.0;
-        for(int i = 0; i < _fft.n; ++i) {
+        for(int i = 0; i < (int)_fft.n/2; ++i) {
             res[i] = Math.abs(res[i]);
             if(res[i] > max) {
                 max = res[i];
             }
-            f[i] = i*(1/_fft.n);
+            f[i] = i*(1/(int)_fft.n/2);
+        }
+        max = 100;
+
+        if(_mean_iterator > 100) {
+            _mean_iterator = 1;
+        }
+
+        if(_fft.n/2 == _mean_queue.size()) {
+            for(int i = 0; i < _fft.n/2; ++i) {
+                float value = (float)_mean_queue.get(i);
+                float first =(float) (value * (1- 1/_mean_iterator));
+                float second = (float) (res[i] * (1/_mean_iterator));
+                value = first + second;
+                _mean_queue.set(i, value);
+            }
+            ++_mean_iterator;
+        } else {
+            _mean_queue.clear();
+            _mean_iterator = 1;
+            for(int i = 0; i < _fft.n/2; ++i) {
+                _mean_queue.add((float)res[i]);
+            }
         }
 
         // define color
@@ -130,13 +167,13 @@ public class FFTVisualizer extends View {
         // get first coordinates
         Point2d last_data_point = new Point2d();
         last_data_point.x = map(0, 0, 0, (float) max, _width);
-        last_data_point.y = map((float) res[0], 0, (float) max, 0, _height);
+        last_data_point.y = map((float) res[0], 0, (float) max, _height/2, 0);
 
         // create graph
-        for(int i = 0; i < _fft.n; ++i) {
+        for(int i = 0; i < (int)_fft.n/2; ++i) {
             // get y value of axis
-            float x_value = map(i, 0, _fft.n-1, 0, _width);
-            float y_value = map((float) res[i], 0, (float) max, 0, _height);
+            float x_value = map(i, 0, (int)_fft.n/2-1, 0, _width);
+            float y_value = map((float) res[i], 0, (float) max, _height/2, 0);
 
             // draw x line
             canvas.drawLine(last_data_point.x, last_data_point.y, x_value, y_value, color);
@@ -156,5 +193,13 @@ public class FFTVisualizer extends View {
     // master mapping function
     private float map(float value, float in_min, float in_max, float out_min, float out_max) {
         return out_min + ((out_max - out_min) / (in_max - in_min)) * (value - in_min);
+    }
+
+    public float getMean() {
+        float result = 0;
+        for(float item: _mean_queue) {
+            result += item/_mean_queue.size();
+        }
+        return result;
     }
 }

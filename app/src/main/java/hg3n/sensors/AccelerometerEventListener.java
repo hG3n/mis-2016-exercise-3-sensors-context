@@ -4,12 +4,6 @@ import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.sax.TextElementListener;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.lang.Math;
 import java.util.LinkedList;
@@ -21,26 +15,23 @@ public class AccelerometerEventListener implements SensorEventListener {
 
     private static final String TAG = "AccEL\t";
 
-    private TextView _x_text_field;
-    private TextView _y_text_field;
-    private TextView _z_text_field;
-
     private float[] _gravity = new float[3];
     private float[] _linear_acceleration = new float[3];
 
     private int _data_frame;
     private LinkedList<AccelerometerData> _vis_data_queue = new LinkedList<AccelerometerData>();
     private LinkedList<AccelerometerData> _fft_data_queue = new LinkedList<AccelerometerData>();
+    private LinkedList<AccelerometerData> _recording_queue = new LinkedList<AccelerometerData>();
     private int _fft_window_size = 256;
 
     private SensorVisualizer _sensor_visualizer;
     private FFTVisualizer _fft_visualizer;
 
-    public AccelerometerEventListener(Activity activity) {
-        _x_text_field = (TextView)activity.findViewById(R.id.x_axis_value);
-        _y_text_field = (TextView)activity.findViewById(R.id.y_axis_value);
-        _z_text_field = (TextView)activity.findViewById(R.id.z_axis_value);
+    private MainActivity _activity;
 
+    public AccelerometerEventListener(MainActivity activity) {
+
+        _activity = activity;
         _sensor_visualizer = (SensorVisualizer)activity.findViewById(R.id.data_view);
         _fft_visualizer = (FFTVisualizer)activity.findViewById(R.id.fft_view);
     }
@@ -62,7 +53,6 @@ public class AccelerometerEventListener implements SensorEventListener {
 
         // get magnitued values
         double magnitude = - calcMagnitude(_linear_acceleration[0], _linear_acceleration[1], _linear_acceleration[2]);
-        Log.d(TAG, Double.toString(magnitude));
 
         // get current time
         long current_time = System.currentTimeMillis();
@@ -108,13 +98,17 @@ public class AccelerometerEventListener implements SensorEventListener {
         } else {
             _fft_data_queue.add(data);
         }
+
+        float mean = _fft_visualizer.getMean();
+        _activity.notify(mean);
+    }
+
+    public void resetIterator() {
+        _fft_visualizer.resetIterator();
     }
 
     private void updateTextViews() {
         // set values to text views
-        _x_text_field.setText(String.format("%.2f", _linear_acceleration[0]));
-        _y_text_field.setText(String.format("%.2f", _linear_acceleration[1]));
-        _z_text_field.setText(String.format("%.2f", _linear_acceleration[2]));
     }
 
     @Override

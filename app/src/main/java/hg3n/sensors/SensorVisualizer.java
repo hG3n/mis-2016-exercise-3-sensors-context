@@ -97,13 +97,13 @@ public class SensorVisualizer extends View {
         Point2d last_data_point = new Point2d();
         last_data_point.x = map(0, 0, 99, 0, _width);
         if(axis == 'x') {
-            last_data_point.y = map(_data_queue.get(0).x, 0, 15, 0, _height/2);
+            last_data_point.y = map(_data_queue.get(0).x, 0, 25, 0, _height/2);
         } else if (axis == 'y') {
-            last_data_point.y = map(_data_queue.get(0).y, 0, 15, 0, _height/2);
+            last_data_point.y = map(_data_queue.get(0).y, 0, 25, 0, _height/2);
         } else if (axis == 'z') {
-            last_data_point.y = map(_data_queue.get(0).z, 0, 15, 0, _height/2);
+            last_data_point.y = map(_data_queue.get(0).z, 0, 25, 0, _height/2);
         } else if (axis == 'm') {
-            last_data_point.y = (float) map((float) _data_queue.get(0).magnitude, 0, 10, 0, _height / 2);
+            last_data_point.y = (float) map((float) _data_queue.get(0).magnitude, 0, 25, 0, _height / 2);
         }
 
         // create graph
@@ -115,13 +115,13 @@ public class SensorVisualizer extends View {
             float x_value = map(i, 0, 99, 0, _width);
             float y_value = 0.0f;
             if(axis == 'x') {
-                y_value = map(current_item.x, 0, 15, 0, _height/2);
+                y_value = map(current_item.x, 0, 25, 0, _height/2);
             } else if (axis == 'y') {
-                y_value = map(current_item.y, 0, 15, 0, _height/2);
+                y_value = map(current_item.y, 0, 25, 0, _height/2);
             } else if (axis == 'z') {
-                y_value = map(current_item.z, 0, 15, 0, _height/2);
+                y_value = map(current_item.z, 0, 25, 0, _height/2);
             } else if (axis == 'm') {
-                y_value = (float) map((float) current_item.magnitude, 0, 10, 0, _height/2);
+                y_value = (float) map((float) current_item.magnitude, 0, 25, 0, _height/2);
             }
 
             // draw x line
